@@ -13,6 +13,7 @@ const startBtn=document.getElementById('start');
 let running=false,last=0,pos=0,time=0,stars=0,baseSpeed=2,jumpT=0,slowT=0;
 let objects=[],finish=5000;
 let aiBikes=[];
+
 function init(){
   panel.hidden=true;
   startPanel.hidden=false;

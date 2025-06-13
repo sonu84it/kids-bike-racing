@@ -13,8 +13,15 @@ const startBtn=document.getElementById('start');
 let running=false,last=0,pos=0,time=0,stars=0,baseSpeed=2,jumpT=0,slowT=0;
 let objects=[],finish=5000;
 let aiBikes=[];
+
+function init(){
+  panel.hidden=true;
+  startPanel.hidden=false;
+  draw();
+}
 function reset(){
-  running=true;last=0;pos=0;time=0;stars=0;jumpT=0;slowT=0;objects=[];
+  running=true;pos=0;time=0;stars=0;jumpT=0;slowT=0;objects=[];
+  last=performance.now();
   for(let x=800;x<=finish;x+=800)objects.push({x,star:Math.random()<0.5,hit:false});
   aiBikes=[{pos:0,speed:2.3},{pos:0,speed:1.9}];
   panel.hidden=true;startPanel.hidden=true;
@@ -82,3 +89,4 @@ function loop(t){
   draw();
   requestAnimationFrame(loop);
 }
+init();

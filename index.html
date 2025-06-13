@@ -8,15 +8,23 @@
 <body>
 <div id="game-container">
   <canvas id="game" width="600" height="400"></canvas>
-  <div id="hud"><span id="time">Time: 0.0s</span> <span id="starCount">Stars: 0</span></div>
-  <div id="controls"><button id="btnRight">▶</button><button id="btnJump">⬆️</button></div>
+  <div id="hud">
+    <span id="time">Time: 0.0s</span>
+    <span id="speed">Speed: 2</span>
+  </div>
+  <div id="controls">
+    <button id="btnLeft">⬅️</button>
+    <button id="btnRight">➡️</button>
+    <button id="btnUp">🔼</button>
+    <button id="btnDown">🔽</button>
+  </div>
   <div id="start-panel" class="panel">
     <h1>Kids Bike Racing</h1>
     <p>Tap Start to begin the race!</p>
     <button id="start">Start Race</button>
   </div>
   <div id="panel" class="panel" hidden>
-    <h1>You Win!</h1>
+    <h1 id="panel-title">You Win!</h1>
     <p id="final"></p>
     <button id="play">Play Again</button>
   </div>

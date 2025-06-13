@@ -1,2 +1,2 @@
 # kids-bike-racing
-Create a side-scrolling web game called “Kids Bike Racing.”
+Simple side-scrolling demo where a red square races blue squares to the finish line.

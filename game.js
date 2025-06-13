@@ -2,50 +2,63 @@
 const canvas=document.getElementById('game');
 const ctx=canvas.getContext('2d');
 const hudTime=document.getElementById('time');
-const hudStars=document.getElementById('starCount');
+const hudSpeed=document.getElementById('speed');
+const btnLeft=document.getElementById('btnLeft');
 const btnRight=document.getElementById('btnRight');
-const btnJump=document.getElementById('btnJump');
+const btnUp=document.getElementById('btnUp');
+const btnDown=document.getElementById('btnDown');
 const panel=document.getElementById('panel');
 const final=document.getElementById('final');
 const playBtn=document.getElementById('play');
 const startPanel=document.getElementById('start-panel');
 const startBtn=document.getElementById('start');
-let running=false,last=0,pos=0,time=0,stars=0,baseSpeed=2,jumpT=0,slowT=0;
-let objects=[],finish=5000;
-let aiBikes=[];
-
+let running=false,last=0,pos=0,time=0,speed=2,playerX=0;
+const finish=5000;
+let aiRacers=[];
+let leftPressed=false,rightPressed=false,upPressed=false,downPressed=false;
 function init(){
   panel.hidden=true;
   startPanel.hidden=false;
   draw();
 }
 function reset(){
-  running=true;pos=0;time=0;stars=0;jumpT=0;slowT=0;objects=[];
+  running=true;
+  pos=0;
+  time=0;
+  speed=2;
+  playerX=0;
   last=performance.now();
-  for(let x=800;x<=finish;x+=800)objects.push({x,star:Math.random()<0.5,hit:false});
-  aiBikes=[{pos:0,speed:2.3},{pos:0,speed:1.9}];
-  panel.hidden=true;startPanel.hidden=true;
+  aiRacers=[{pos:200,lane:-100,speed:2.5},{pos:-300,lane:100,speed:2.2}];
+  panel.hidden=true;
+  startPanel.hidden=true;
+  document.getElementById('panel-title').textContent='You Win!';
   draw();
   requestAnimationFrame(loop);
 }
-function jump(){if(!jumpT)jumpT=0.001;}
 function update(dt){
-  let speed=baseSpeed+(btnRightPressed?2:0);
-  if(slowT>0){slowT-=dt;speed=1;}
+  if(leftPressed) playerX=Math.max(playerX-200*dt,-250);
+  if(rightPressed) playerX=Math.min(playerX+200*dt,250);
+  if(upPressed) speed=Math.min(speed+1*dt,5);
+  if(downPressed) speed=Math.max(speed-1*dt,1);
+
   pos+=speed*100*dt;
-  if(jumpT)jumpT+=dt;
-  if(jumpT>0.3)jumpT=0;
-  objects.forEach(o=>{
-    if(!o.hit&&pos+300>o.x&&pos+300<o.x+40&&(!jumpT||o.star)){
-      o.hit=true;
-      if(o.star)stars++;else slowT=1;
+  aiRacers.forEach(r=>{r.pos+=r.speed*100*dt;});
+
+  aiRacers.forEach(r=>{
+    let dx=(300+playerX)-(300-(r.pos-pos)+r.lane);
+    if(Math.abs(dx)<20 && Math.abs(r.pos-pos)<20){
+      running=false;
+      document.getElementById('panel-title').textContent='Game Over';
+      final.textContent=`You crashed after ${(pos/100).toFixed(0)}m`;
+      panel.hidden=false;
     }
   });
-  aiBikes.forEach(b=>{b.pos+=b.speed*100*dt;});
-  if(pos>finish){
+
+  if(pos>=finish && running){
     running=false;
+    document.getElementById('panel-title').textContent='You Win!';
+    final.textContent=`Time: ${time.toFixed(1)}s`;
     panel.hidden=false;
-    final.textContent=`Time: ${time.toFixed(1)}s Stars: ${stars}`;
   }
 }
 function draw(){
@@ -56,28 +69,46 @@ function draw(){
   ctx.strokeStyle='#fff';ctx.setLineDash([20,20]);
   ctx.beginPath();ctx.moveTo(0,330);ctx.lineTo(600,330);ctx.stroke();
   ctx.setLineDash([]);
-  objects.forEach(o=>{
-    let x=300-(o.x-pos);
-    if(!o.hit&&x>-50&&x<650){
-      ctx.font='24px serif';
-      ctx.fillText(o.star?'⭐':'🪨',x,o.star?280:330);
-    }
+
+  const finishX=300-(finish-pos);
+  if(finishX>0&&finishX<600){
+    ctx.fillStyle='#fff';
+    ctx.fillRect(finishX,300,4,100);
+  }
+
+  ctx.fillStyle='#00f';
+  aiRacers.forEach(r=>{
+    const x=300-(r.pos-pos)+r.lane;
+    if(x>-20&&x<620)ctx.fillRect(x-10,280,20,20);
   });
-window.onload=init;
-    let x=300-(b.pos-pos);
-    if(x>-50&&x<650){ctx.font='28px serif';ctx.fillText('🚲',x,300);}
-  });
-  ctx.font='32px serif';
-  ctx.fillText('🚲',280,jumpT?250:300);
+
+  ctx.fillStyle='#f00';
+  ctx.fillRect(300+playerX-10,280,20,20);
+
   hudTime.textContent=`Time: ${time.toFixed(1)}s`;
-  hudStars.textContent=`Stars: ${stars}`;
+  hudSpeed.textContent=`Speed: ${speed.toFixed(1)}`;
 }
-let btnRightPressed=false;
-btnRight.onpointerdown=()=>{btnRightPressed=true;};
-btnRight.onpointerup=()=>{btnRightPressed=false;};
-btnJump.onpointerdown=jump;
-window.onkeydown=e=>{if(e.key==='ArrowRight')btnRightPressed=true;if(e.key==='ArrowUp')jump();};
-window.onkeyup=e=>{if(e.key==='ArrowRight')btnRightPressed=false;};
+btnLeft.onpointerdown=()=>{leftPressed=true;};
+btnLeft.onpointerup=()=>{leftPressed=false;};
+btnRight.onpointerdown=()=>{rightPressed=true;};
+btnRight.onpointerup=()=>{rightPressed=false;};
+btnUp.onpointerdown=()=>{upPressed=true;};
+btnUp.onpointerup=()=>{upPressed=false;};
+btnDown.onpointerdown=()=>{downPressed=true;};
+btnDown.onpointerup=()=>{downPressed=false;};
+
+window.onkeydown=e=>{
+  if(e.key==='ArrowLeft')leftPressed=true;
+  if(e.key==='ArrowRight')rightPressed=true;
+  if(e.key==='ArrowUp')upPressed=true;
+  if(e.key==='ArrowDown')downPressed=true;
+};
+window.onkeyup=e=>{
+  if(e.key==='ArrowLeft')leftPressed=false;
+  if(e.key==='ArrowRight')rightPressed=false;
+  if(e.key==='ArrowUp')upPressed=false;
+  if(e.key==='ArrowDown')downPressed=false;
+};
 playBtn.onclick=reset;
 startBtn.onclick=reset;
 function loop(t){
@@ -89,4 +120,4 @@ function loop(t){
   draw();
   requestAnimationFrame(loop);
 }
-init();
+window.onload=init;

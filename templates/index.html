@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kids Bike Racing</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="game-container">
+  <canvas id="game" width="900" height="600"></canvas>
+  <div id="hud">
+    <span id="hud-time">Time: 60</span>
+    <span id="hud-stars">Stars: 0</span>
+  </div>
+  <div id="controls">
+    <button id="btnLeft">◀</button>
+    <button id="btnRight">▶</button>
+    <button id="btnJump">⬆</button>
+  </div>
+  <div id="start-panel" class="panel">
+    <h1>Kids Bike Racing</h1>
+    <p>Name: <input id="playerName" value="" placeholder="Player"/></p>
+    <button id="start">Play</button>
+  </div>
+  <div id="end-panel" class="panel" hidden>
+    <h1 id="resultTitle">Finished!</h1>
+    <p id="resultScore"></p>
+    <h2>Leaderboard</h2>
+    <ol id="leaderboard"></ol>
+    <button id="restart">Play Again</button>
+  </div>
+</div>
+<script src="/static/js/game.js"></script>
+</body>
+</html>

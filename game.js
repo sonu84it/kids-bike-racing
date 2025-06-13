@@ -63,7 +63,7 @@ function draw(){
       ctx.fillText(o.star?'⭐':'🪨',x,o.star?280:330);
     }
   });
-  aiBikes.forEach(b=>{
+window.onload=init;
     let x=300-(b.pos-pos);
     if(x>-50&&x<650){ctx.font='28px serif';ctx.fillText('🚲',x,300);}
   });

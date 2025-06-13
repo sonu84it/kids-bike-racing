@@ -1,6 +1,6 @@
 body{font-family:sans-serif;background:#9be8f9;margin:0;}
-#game-container{position:relative;width:600px;height:400px;margin:20px auto;background:#bef;overflow:hidden;}
-canvas{background:linear-gradient(#9be8f9,#d0f4f7 70%,#7c543e 70%,#7c543e);display:block;}
+#game-container{position:relative;width:600px;height:400px;margin:20px auto;background:#bef;overflow:hidden;perspective:800px;}
+canvas{background:linear-gradient(#9be8f9,#d0f4f7 70%,#7c543e 70%,#7c543e);display:block;transform:rotateX(20deg);transform-origin:top;}
 #hud{position:absolute;top:10px;left:10px;color:#333;font-size:18px;}
 #controls{position:absolute;bottom:10px;right:10px;}
 #controls button{font-size:24px;margin-left:5px;}

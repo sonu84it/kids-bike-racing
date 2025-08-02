@@ -10,9 +10,8 @@ const hudScore = document.getElementById('hud-score');
 const startPanel = document.getElementById('start-panel');
 const endPanel = document.getElementById('end-panel');
 const resultScore = document.getElementById('resultScore');
-const leaderboardEl = document.getElementById('leaderboard');
 
-const playerNameInput = document.getElementById('playerName');
+const gameMinutesInput = document.getElementById('gameMinutes');
 const startBtn = document.getElementById('start');
 const restartBtn = document.getElementById('restart');
 
@@ -41,7 +40,8 @@ let vy = 0;
 let spawnTimer = 0;
 
 function startGame() {
-  timeRemaining = 60;
+  const minutes = parseFloat(gameMinutesInput.value) || 1;
+  timeRemaining = minutes * 60;
   starsCollected = 0;
   distance = 0;
   objects = [];
@@ -61,7 +61,6 @@ function endGame(msg) {
   running = false;
   const score = Math.max(0, Math.floor(timeRemaining * 5 + starsCollected * 10));
   resultScore.textContent = `${msg} Score: ${score}`;
-  submitScore(playerNameInput.value || 'Anon', score).then(loadLeaderboard);
   endPanel.hidden = false;
 }
 
@@ -201,27 +200,3 @@ btnDown.addEventListener('pointerdown', () => braking = true);
 btnDown.addEventListener('pointerup', () => braking = false);
 btnDown.addEventListener('pointercancel', () => braking = false);
 btnDown.addEventListener('pointerleave', () => braking = false);
-
-function submitScore(name, score) {
-  return fetch('api/score', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, score })
-  }).catch(() => Promise.resolve());
-}
-
-function loadLeaderboard() {
-  fetch('api/leaderboard')
-    .then(r => r.json())
-    .then(data => {
-      leaderboardEl.innerHTML = '';
-      data.forEach(entry => {
-        const li = document.createElement('li');
-        li.textContent = `${entry.name} - ${entry.score}`;
-        leaderboardEl.appendChild(li);
-      });
-    })
-    .catch(() => {
-      leaderboardEl.innerHTML = '<li>No scores yet</li>';
-    });
-}

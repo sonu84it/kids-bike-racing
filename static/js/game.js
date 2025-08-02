@@ -34,6 +34,7 @@ let timeRemaining = 60;
 let starsCollected = 0;
 let distance = 0;
 let objects = []; // active stars and rocks
+let timeElapsed = 0; // track how long the player has been racing
 
 let playerY = GROUND_Y;
 let vy = 0;
@@ -42,6 +43,7 @@ let spawnTimer = 0;
 function startGame() {
   const minutes = parseFloat(gameMinutesInput.value) || 1;
   timeRemaining = minutes * 60;
+  timeElapsed = 0;
   starsCollected = 0;
   distance = 0;
   objects = [];
@@ -59,7 +61,7 @@ function startGame() {
 
 function endGame(msg) {
   running = false;
-  const score = Math.max(0, Math.floor(timeRemaining * 5 + starsCollected * 10));
+  const score = Math.max(0, Math.floor(timeElapsed * 5 + starsCollected * 10));
   resultScore.textContent = `${msg} Score: ${score}`;
   endPanel.hidden = false;
 }
@@ -111,6 +113,7 @@ function update(dt) {
 
   distance += speed * dt;
   timeRemaining -= dt;
+  timeElapsed += dt;
 
   if (timeRemaining <= 0) {
     endGame('Game Over!');
@@ -160,7 +163,7 @@ function draw() {
 
   hudTime.textContent = `Time: ${Math.ceil(timeRemaining)}`;
   hudStars.textContent = `Stars: ${starsCollected}`;
-  const score = Math.max(0, Math.floor(timeRemaining * 5 + starsCollected * 10));
+  const score = Math.max(0, Math.floor(timeElapsed * 5 + starsCollected * 10));
   hudScore.textContent = `Score: ${score}`;
 }
 

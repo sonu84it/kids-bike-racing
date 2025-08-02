@@ -60,6 +60,10 @@ canvas {
   text-align: center;
 }
 
+.panel[hidden] {
+  display: none !important;
+}
+
 .panel button {
   font-size: 1.2em;
   padding: 10px 20px;

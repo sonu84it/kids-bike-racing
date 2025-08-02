@@ -12,22 +12,21 @@
   <div id="hud">
     <span id="hud-time">Time: 60</span>
     <span id="hud-stars">Stars: 0</span>
+    <span id="hud-score">Score: 0</span>
   </div>
   <div id="controls">
-    <button id="btnLeft">◀</button>
+    <button id="btnDown">⬇</button>
     <button id="btnRight">▶</button>
     <button id="btnJump">⬆</button>
   </div>
   <div id="start-panel" class="panel">
     <h1>Kids Bike Racing</h1>
-    <p>Name: <input id="playerName" value="" placeholder="Player"/></p>
+    <p>Minutes: <input id="gameMinutes" type="number" min="1" value="1" /></p>
     <button id="start">Play</button>
   </div>
   <div id="end-panel" class="panel" hidden>
     <h1 id="resultTitle">Finished!</h1>
     <p id="resultScore"></p>
-    <h2>Leaderboard</h2>
-    <ol id="leaderboard"></ol>
     <button id="restart">Play Again</button>
   </div>
 </div>

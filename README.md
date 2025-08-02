@@ -25,7 +25,7 @@ Ride your bike along the side-scrolling track, collecting stars and avoiding roc
 
 ### Starting the game
 
-When the page loads, enter a name (optional) and click Play to begin.
+When the page loads, enter how many minutes you want to play and click Play to begin.
 
 ### Controls
 
@@ -45,4 +45,4 @@ You lose if the timer reaches zero and win by covering the required distance bef
 
 ### After the race
 
-Once the race ends, your score (based on remaining time and collected stars) is displayed alongside a leaderboard, with an option to play again
+Once the race ends, your score, starting from 0 and increasing with each second survived and star collected, is displayed with an option to play again

@@ -45,4 +45,4 @@ You lose if the timer reaches zero and win by covering the required distance bef
 
 ### After the race
 
-Once the race ends, your score (based on remaining time and collected stars) is displayed with an option to play again
+Once the race ends, your score, starting from 0 and increasing with each second survived and star collected, is displayed with an option to play again

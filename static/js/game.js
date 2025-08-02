@@ -6,6 +6,7 @@ const ctx = canvas.getContext('2d');
 
 const hudTime = document.getElementById('hud-time');
 const hudStars = document.getElementById('hud-stars');
+const hudScore = document.getElementById('hud-score');
 const startPanel = document.getElementById('start-panel');
 const endPanel = document.getElementById('end-panel');
 const resultScore = document.getElementById('resultScore');
@@ -15,7 +16,7 @@ const playerNameInput = document.getElementById('playerName');
 const startBtn = document.getElementById('start');
 const restartBtn = document.getElementById('restart');
 
-const btnLeft = document.getElementById('btnLeft');
+const btnDown = document.getElementById('btnDown');
 const btnRight = document.getElementById('btnRight');
 const btnJump = document.getElementById('btnJump');
 
@@ -25,7 +26,8 @@ const JUMP_VY = -350;
 const GRAVITY = 900;
 const SCROLL_SPEED = 200;
 let accelerating = false;
-const FINISH_DIST = 2000;
+let braking = false;
+const FINISH_DIST = SCROLL_SPEED * 60 * 1.5;
 
 let lastTime = 0;
 let running = false;
@@ -47,6 +49,8 @@ function startGame() {
   vy = 0;
   spawnTimer = 0;
   lastTime = performance.now();
+  accelerating = false;
+  braking = false;
   running = true;
   startPanel.hidden = true;
   endPanel.hidden = true;
@@ -75,7 +79,9 @@ function update(dt) {
   }
 
   // update objects
-  const speed = accelerating ? SCROLL_SPEED * 1.5 : SCROLL_SPEED;
+  let speed = SCROLL_SPEED;
+  if (accelerating) speed *= 1.5;
+  if (braking) speed *= 0.5;
   objects.forEach(obj => {
     obj.x -= speed * dt;
   });
@@ -155,6 +161,8 @@ function draw() {
 
   hudTime.textContent = `Time: ${Math.ceil(timeRemaining)}`;
   hudStars.textContent = `Stars: ${starsCollected}`;
+  const score = Math.max(0, Math.floor(timeRemaining * 5 + starsCollected * 10));
+  hudScore.textContent = `Score: ${score}`;
 }
 
 function loop(timestamp) {
@@ -177,16 +185,22 @@ startBtn.addEventListener('click', startGame);
 restartBtn.addEventListener('click', startGame);
 btnJump.addEventListener('pointerdown', jump);
 window.addEventListener('keydown', e => {
-  if (e.key === ' ') jump();
+  if (e.key === ' ' || e.key === 'ArrowUp') jump();
   if (e.key === 'ArrowRight') accelerating = true;
+  if (e.key === 'ArrowDown') braking = true;
 });
 window.addEventListener('keyup', e => {
   if (e.key === 'ArrowRight') accelerating = false;
+  if (e.key === 'ArrowDown') braking = false;
 });
 btnRight.addEventListener('pointerdown', () => accelerating = true);
 btnRight.addEventListener('pointerup', () => accelerating = false);
 btnRight.addEventListener('pointercancel', () => accelerating = false);
 btnRight.addEventListener('pointerleave', () => accelerating = false);
+btnDown.addEventListener('pointerdown', () => braking = true);
+btnDown.addEventListener('pointerup', () => braking = false);
+btnDown.addEventListener('pointercancel', () => braking = false);
+btnDown.addEventListener('pointerleave', () => braking = false);
 
 function submitScore(name, score) {
   return fetch('api/score', {

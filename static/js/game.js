@@ -189,15 +189,15 @@ btnRight.addEventListener('pointercancel', () => accelerating = false);
 btnRight.addEventListener('pointerleave', () => accelerating = false);
 
 function submitScore(name, score) {
-  return fetch('/api/score', {
+  return fetch('api/score', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, score })
-  });
+  }).catch(() => Promise.resolve());
 }
 
 function loadLeaderboard() {
-  fetch('/api/leaderboard')
+  fetch('api/leaderboard')
     .then(r => r.json())
     .then(data => {
       leaderboardEl.innerHTML = '';
@@ -206,5 +206,8 @@ function loadLeaderboard() {
         li.textContent = `${entry.name} - ${entry.score}`;
         leaderboardEl.appendChild(li);
       });
+    })
+    .catch(() => {
+      leaderboardEl.innerHTML = '<li>No scores yet</li>';
     });
 }
